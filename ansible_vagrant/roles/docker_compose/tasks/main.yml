@@ -59,15 +59,3 @@
     msg: "{{ _curl_mailhog.stdout }}"
 
 ...
-
-
-
-telnet localhost 1025 << EOF
-HELO mailhog.example
-MAIL FROM:<test@test.com>
-RCPT TO:<test2@test.com>
-DATA
-Body of email.
-.
-QUIT
-EOF

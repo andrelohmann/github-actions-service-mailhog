@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function err_exit { echo -e 1>&2; exit 1; }
+function success_exit { echo -e 1>&2; exit 0; }
 
 # create message
 function mail_input {
@@ -16,4 +16,4 @@ echo "."
 echo "QUIT"
 }
 
-mail_input | telnet localhost 1025 || err_exit
+mail_input | telnet localhost 1025 || success_exit
