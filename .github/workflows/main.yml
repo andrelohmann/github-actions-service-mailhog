@@ -36,16 +36,9 @@ jobs:
 
     - name: Validate mailhog availability - Telnet to the mailserver
       run: |
-        telnet localhost 1025 << EOF
-        HELO cloudflare.com
-        MAIL FROM:<test@test.com>
-        RCPT TO:<test2@test.com>
-        DATA
-        Body of email.
-        .
-        QUIT
-        EOF
-        exit 0
+        chmod +x ./.github/scripts/test_mailhog.sh
+        ./.github/scripts/test_mailhog.sh
+
 
     - name: Validate mailhog availability - Call the mailserver api
       run: |
