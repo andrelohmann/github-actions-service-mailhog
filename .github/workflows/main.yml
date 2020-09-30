@@ -1,0 +1,48 @@
+name: Test github action services
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    # Environment Variables
+    env:
+      MAIL_HOST: localhost
+      MAIL_PORT: 1025
+      MAILHOG_API_PORT: 8025
+      MAILHOG_API_URL: localhost
+    # Service containers to run with `container-job`
+    services:
+      # Label used to access the service container
+      mailhog:
+        image: mailhog/mailhog
+        ports:
+        - 1025:1025
+        - 8025:8025
+        #env:
+          #MH_HOSTNAME: mailhog.lokal
+          #MH_API_BIND_ADDR: 0.0.0.0:8025
+          #MH_SMTP_BIND_ADDR: 0.0.0.0:25
+
+    steps:
+    - name: Display listeningports
+      run: |
+        netstat -tulpen
+        docker ps -a
+
+    - name: Validate mailhog availability - Telnet to the mailserver
+      run: |
+        telnet localhost 1025 << EOF
+        HELO cloudflare.com
+        MAIL FROM:<test@test.com>
+        RCPT TO:<test2@test.com>
+        DATA
+        Body of email.
+        .
+        QUIT
+        EOF
+        exit 0
+
+    - name: Validate mailhog availability - Call the mailserver api
+      run: |
+        curl -i http://localhost:8025/api/v2/messages

@@ -1,0 +1,62 @@
+---
+
+- name: Create /home/vagrant/docker
+  file:
+    path: /home/vagrant/docker
+    owner: vagrant
+    group: vagrant
+    state: directory
+
+- name: add docker-compose.yml
+  copy:
+    src: docker-compose.yml
+    dest: /home/vagrant/docker/docker-compose.yml
+    owner: vagrant
+    group: vagrant
+    mode: 0755
+
+- name: run docker-compose
+  shell: |
+    docker-compose up -d
+  args:
+    executable: /bin/bash
+    chdir: /home/vagrant/docker
+
+- name: Validate mailhog availability - Telnet to the mailserver
+  shell: |
+    telnet localhost 1025 << EOF
+    HELO cloudflare.com
+    MAIL FROM:<test@test.com>
+    RCPT TO:<test2@test.com>
+    DATA
+    Body of email.
+    .
+    QUIT
+    EOF
+    exit 0
+  args:
+    executable: /bin/bash
+
+- name: Validate mailhog availability - Call the mailserver api
+  shell: |
+    curl -i http://localhost:8025/api/v2/messages
+  args:
+    executable: /bin/bash
+  register: _curl_mailhog
+
+- name: Temporary URL
+  debug:
+    msg: "{{ _curl_mailhog.stdout }}"
+
+- name: Validate mailhog availability - Call the mailserver api
+  shell: |
+    curl -X DELETE http://localhost:8025/api/v1/messages
+  args:
+    executable: /bin/bash
+  register: _curl_mailhog
+
+- name: Temporary URL
+  debug:
+    msg: "{{ _curl_mailhog.stdout }}"
+
+...
