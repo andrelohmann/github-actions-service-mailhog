@@ -25,6 +25,9 @@ jobs:
           #MH_SMTP_BIND_ADDR: 0.0.0.0:25
 
     steps:
+    - name: checkout
+      uses: actions/checkout@v2
+
     - name: Display listeningports
       run: |
         netstat -tulpen
