@@ -32,6 +32,9 @@ jobs:
       run: |
         netstat -tulpen
         docker ps -a
+        free
+        cat /proc/cpuinfo
+        sudo iptables -L
 
     - name: Validate mailhog availability - Call the mailserver api
       run: |
