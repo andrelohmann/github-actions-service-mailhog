@@ -14,4 +14,4 @@ echo "."
 echo "quit"
 }
 
-mail_input | netcat $server $port || err_exit
+mail_input | netcat localhost 1025 || err_exit
