@@ -16,4 +16,4 @@ echo "."
 echo "QUIT"
 }
 
-mail_input | telnet localhost 1025 || success_exit
+mail_input | telnet $MAIL_HOST $MAIL_PORT || success_exit
