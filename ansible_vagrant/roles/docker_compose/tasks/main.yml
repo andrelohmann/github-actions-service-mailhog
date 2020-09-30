@@ -15,6 +15,14 @@
     group: vagrant
     mode: 0755
 
+- name: add test_mailhog.sh
+  copy:
+    src: test_mailhog.sh
+    dest: /home/vagrant/test_mailhog.sh
+    owner: vagrant
+    group: vagrant
+    mode: 0755
+
 - name: run docker-compose
   shell: |
     docker-compose up -d
@@ -24,16 +32,7 @@
 
 - name: Validate mailhog availability - Telnet to the mailserver
   shell: |
-    telnet localhost 1025 << EOF
-    HELO cloudflare.com
-    MAIL FROM:<test@test.com>
-    RCPT TO:<test2@test.com>
-    DATA
-    Body of email.
-    .
-    QUIT
-    EOF
-    exit 0
+    /home/vagrant/test_mailhog.sh
   args:
     executable: /bin/bash
 
@@ -60,3 +59,15 @@
     msg: "{{ _curl_mailhog.stdout }}"
 
 ...
+
+
+
+telnet localhost 1025 << EOF
+HELO mailhog.example
+MAIL FROM:<test@test.com>
+RCPT TO:<test2@test.com>
+DATA
+Body of email.
+.
+QUIT
+EOF
