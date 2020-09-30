@@ -30,6 +30,10 @@ jobs:
         netstat -tulpen
         docker ps -a
 
+    - name: Validate mailhog availability - Call the mailserver api
+      run: |
+        curl -i http://localhost:8025/api/v2/messages
+
     - name: Validate mailhog availability - Telnet to the mailserver
       run: |
         telnet localhost 1025 << EOF
@@ -45,4 +49,9 @@ jobs:
 
     - name: Validate mailhog availability - Call the mailserver api
       run: |
+        curl -i http://localhost:8025/api/v2/messages
+
+    - name: Validate mailhog availability - Call the mailserver api
+      run: |
+        curl -i -X DELETE http://localhost:8025/api/v1/messages
         curl -i http://localhost:8025/api/v2/messages
